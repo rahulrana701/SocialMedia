@@ -10,7 +10,7 @@ import {
   commentPost,
   specificUserPosts,
   followingPost,
-  bookmarks
+  bookmarks,
 } from "../controllers/PostController";
 
 router.route("/createPost").post(createPost);
@@ -21,6 +21,6 @@ router.route("/Delete/:PostId").delete(deletePost);
 router.route("/Like/:PostId").patch(likePost);
 router.route("/comment/:PostId").patch(commentPost);
 router.route("/followingPost").get(followingPost);
-router.route('specificPost').get(specificUserPosts);
-router.route('/bookmarkPost/:PostId').post(bookmarks);
+router.route("/specificPost/:UserpostId").get(specificUserPosts);
+router.route("/bookmarkPost/:PostId").patch(bookmarks);
 export default router;
