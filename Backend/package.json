@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc && nodemon dist/Backend/app.js"
   },
   "keywords": [],
   "author": "",
@@ -17,15 +18,16 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "db": "*",
-    "middlewares": "*",
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
     "jsonwebtoken": "^9.0.2",
+    "middlewares": "*",
     "mongoose": "^8.2.2",
     "nodemon": "^3.1.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.6"
+    "@types/jsonwebtoken": "^9.0.6",
+    "dotenv-cli": "^7.4.1"
   }
 }

@@ -1,0 +1,150 @@
+In both Axios and the Fetch API, you can pass query parameters by appending them to the URL. 
+Here's how you can do it:
+
+Using Axios:
+
+const axios = require('axios'); // If you're using Node.js/CommonJS
+
+// Make a GET request with query parameters
+axios.get('http://example.com/api/products', {
+  params: {
+    category: 'electronics',
+    sort: 'price',
+    page: 2,
+    limit: 10
+  }
+})
+.then(response => {
+  // Handle success
+  console.log(response.data);
+})
+.catch(error => {
+  // Handle error
+  console.error('Error:', error);
+});
+
+
+Using Fetch API:
+
+// Construct the URL with query parameters
+const url = new URL('http://example.com/api/products');
+url.searchParams.append('category', 'electronics');
+url.searchParams.append('sort', 'price');
+url.searchParams.append('page', 2);
+url.searchParams.append('limit', 10);
+
+// Make a GET request with the constructed URL
+fetch(url)
+  .then(response => {
+    // Check if response is successful
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    // Parse JSON response
+    return response.json();
+  })
+  .then(data => {
+    // Handle data
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error:', error);
+  });
+In both examples:
+
+We construct the URL with the base URL (http://example.com/api/products) and then append the query
+parameters using either Axios's params option or the URLSearchParams object in the Fetch API. 
+For Axios, the params option automatically serializes the object into a query string and 
+appends it to the URL.For Fetch, we manually construct the URL and then fetch it using fetch(url).
+Ensure that you handle any errors that may occur during the request.
+
+User
+and how to send req params via axios
+
+To send request parameters (also known as route parameters) via Axios, you can include them 
+directly in the URL. Route parameters are parts of the URL that are dynamic and vary 
+based on the specific resource you're accessing.
+
+Here's an example of how to send request parameters via Axios:
+
+const axios = require('axios'); // If you're using Node.js/CommonJS
+
+// Assuming you want to make a GET request to retrieve a user by their ID
+const userId = '123'; // Replace '123' with the actual user ID you want to retrieve
+
+axios.get(`http://example.com/api/users/${userId}`)
+  .then(response => {
+    // Handle success
+    console.log(response.data);
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error:', error);
+  });
+In this example, the user ID (userId) is included in the URL as a route parameter using 
+string interpolation. Axios will replace ${userId} with the actual value of userId when 
+making the request.
+
+If you're using ES6 modules or another environment that supports template literals, you can
+achieve the same thing like this:
+
+
+import axios from 'axios';
+
+const userId = '123';
+
+axios.get(`http://example.com/api/users/${userId}`)
+  .then(response => {
+    // Handle success
+    console.log(response.data);
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error:', error);
+  });
+This way, Axios will properly send the request with the route parameter 
+included in the URL. Make sure to replace '123' with the actual ID you want to use.
+
+
+
+
+
+ANOTHER EXPLANATION 
+
+In web development, both route parameters and query parameters are used to pass data from a 
+client (usually a web browser) to a server. However, they are used in different ways and have 
+different purposes.
+
+Route Parameters:
+Purpose: Route parameters are used to define dynamic parts of a URL path.
+Format: They are part of the URL path itself.
+Syntax: They are typically denoted by a colon followed by the parameter name in Express.js routes.
+Example: In a route like /users/:userId, :userId is a route parameter.
+Usage: Route parameters are often used to retrieve specific resources or identify entities in a RESTful API.
+Access in Express.js: In Express.js, you can access route parameters using the req.params object.
+
+app.get('/users/:userId', (req, res) => {
+  const userId = req.params.userId;
+  // Use userId in your logic
+});
+Query Parameters:
+Purpose: Query parameters are used to provide additional information to the server, typically for 
+filtering, sorting, or pagination purposes.
+Format: They come after the ? in a URL and are a series of key-value pairs separated by &.
+Syntax: They are specified as key=value.
+Example: In a URL like /users?name=John&age=30, name and age are query parameters.
+Usage: Query parameters are often used for search queries, filtering data, or passing optional parameters
+ to a server endpoint.
+Access in Express.js: In Express.js, you can access query parameters using the req.query object.
+
+app.get('/users', (req, res) => {
+  const name = req.query.name;
+  const age = req.query.age;
+  // Use name and age in your logic
+});
+Summary:
+Route parameters are part of the URL path and are used for defining dynamic segments in routes.
+Query parameters are appended to the URL and are used for providing additional information to the server.
+In Express.js, route parameters are accessed via req.params, while query parameters are accessed via 
+req.query.

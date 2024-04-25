@@ -1,5 +1,5 @@
 {
-  "name": "SocialMedia",
+  "name": "socialmedia",
   "private": true,
   "scripts": {
     "build": "turbo build",
@@ -10,6 +10,7 @@
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
+    "dotenv-cli": "^7.4.1",
     "prettier": "^3.2.5",
     "turbo": "latest"
   },

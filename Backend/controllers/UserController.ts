@@ -13,10 +13,17 @@ export const SignupLogic = async (req: Request, res: Response) => {
   const { Username, Email, Password, Phonenumber, Country, ProfilePicture } =
     data;
 
-  if (!Username || !Email || !Password || !Phonenumber || !Country) {
+  if (
+    !Username ||
+    !Email ||
+    !Password ||
+    !Phonenumber ||
+    !Country ||
+    !ProfilePicture
+  ) {
     res
       .status(403)
-      .json({ success: "false", message: "Please Enter all the fields" });
+      .json({ success: "false", message: "Please enter all the fields" });
     return;
   }
 
@@ -32,20 +39,20 @@ export const SignupLogic = async (req: Request, res: Response) => {
   const tempUser = {
     Username,
     Email,
-    newpassword,
+    Password: newpassword,
     Phonenumber,
     Country,
     ProfilePicture,
   };
   const UserCreated = await User.create({ ...tempUser });
+  console.log(UserCreated);
   if (!UserCreated) {
     res.status(403).json({ success: "false", message: "some error occured" });
     return;
   }
   const token = Jwt.sign(
     { UserId: UserCreated._id, name: UserCreated.Username },
-    jwtsecret,
-    { expiresIn: "2hr" }
+    jwtsecret
   );
   res
     .status(200)
@@ -56,6 +63,7 @@ export const SignupLogic = async (req: Request, res: Response) => {
 
 export const LoginLogic = async (req: Request, res: Response) => {
   const data = req.body;
+  console.log(data);
   const { Username, Email, Password } = data;
   if (!Username || !Email || !Password) {
     res
@@ -78,9 +86,7 @@ export const LoginLogic = async (req: Request, res: Response) => {
     return;
   }
 
-  const token = Jwt.sign({ UserId: CheckUser._id }, jwtsecret, {
-    expiresIn: "2hr",
-  });
+  const token = Jwt.sign({ UserId: CheckUser._id }, jwtsecret);
   res
     .status(200)
     .json({ success: "true", message: "Logged In Successfully", token });
@@ -114,6 +120,9 @@ export const follow = async (req: Request, res: Response) => {
       .json({ success: "false", message: "you cannot follow yourself" });
     return;
   }
+
+  // mongoose.Types.ObjectId is class named ObjectId used to generate a random ObjectId
+  // and this should not be called as a function it should be called as instance
 
   // Convert string to ObjectId
   const followingUserIdObj = new mongoose.Types.ObjectId(FollowingUserId);
@@ -201,7 +210,7 @@ export const Unfollow = async (req: Request, res: Response) => {
 // --------------------------------- GET OTHER USERS DATA ---------------------------------
 
 export const getspecificUserdata = async (req: Request, res: Response) => {
-  const otherUserId = req.params;
+  const {otherUserId} = req.params;
   const otheruserdata = await User.findById({ _id: otherUserId });
   if (!otheruserdata) {
     res.status(403).json({ success: "false", message: "could not found user" });
@@ -221,26 +230,30 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(403).json({ success: "false", message: "User not found" });
     return;
   }
-  res.status(200).json({success:'true',message:'User deleted Successfully'});
+  res
+    .status(200)
+    .json({ success: "true", message: "User deleted Successfully" });
 };
 
 // -------------------------------- BOOKMARKED POSTS -----------------------------------------
 
-export const bookmarkedPosts= async(req:Request,res:Response)=>{
-  const UserId = req.headers['UserId'];
-  const user = await User.findOne({_id:UserId});
+export const bookmarkedPosts = async (req: Request, res: Response) => {
+  const UserId = req.headers["UserId"];
+  const user = await User.findOne({ _id: UserId });
   if (!user) {
     res.status(403).json({ success: "false", message: "User not found" });
     return;
   }
   const posts = user.Bookmarks;
-  const bookmarkedPosts = posts.map((p)=>p._id);
-  const allposts = await Post.find({_id:{$in:bookmarkedPosts}});
+  const bookmarkedPosts = posts.map((p) => p._id);
+  const allposts = await Post.find({ _id: { $in: bookmarkedPosts } });
   if (!allposts) {
-    res.status(403).json({ success: "false", message: "No Bookmarks To Be Found" });
+    res
+      .status(403)
+      .json({ success: "false", message: "No Bookmarks To Be Found" });
     return;
   }
-  res.status(200).json({success:true,allposts});
-}
+  res.status(200).json({ success: true, allposts });
+};
 
 // --------------------------------------------------------------------------------------
